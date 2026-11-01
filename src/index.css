@@ -43,3 +43,29 @@
     @apply rounded-sm outline-2 outline-offset-2 outline-accent;
   }
 }
+
+/* Scroll fade-in for sections; `is-visible` is added by useReveal() in components/ui.tsx. */
+.reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+@media print {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

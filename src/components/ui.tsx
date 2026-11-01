@@ -1,4 +1,31 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
+
+/** Adds `is-visible` to the element the first time it scrolls into view (pairs with `.reveal` in index.css). */
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (!('IntersectionObserver' in window)) {
+      el.classList.add('is-visible')
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('is-visible')
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return ref
+}
 
 /** Renders `**bold**` segments from content strings as <strong>. */
 export function RichText({ text }: { text: string }) {
@@ -18,8 +45,10 @@ export function RichText({ text }: { text: string }) {
 }
 
 export function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  const ref = useReveal<HTMLElement>()
+
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="py-20 sm:py-28">
+    <section ref={ref} id={id} aria-labelledby={`${id}-title`} className="reveal py-20 sm:py-28">
       <h2
         id={`${id}-title`}
         className="mb-10 flex items-center gap-4 text-sm font-semibold tracking-[0.2em] text-accent uppercase"
