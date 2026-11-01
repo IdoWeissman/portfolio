@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --accent: #2e7d5b;
+  --accent-hover: #256a4c;
+  --on-accent: #ffffff;
+  --accent-soft: #e6f2ec;
+  color-scheme: light;
+}
+
+.dark {
+  /* Lighter tint so accent text keeps WCAG AA contrast on dark backgrounds. */
+  --accent: #5fb88f;
+  --accent-hover: #7cc9a5;
+  --on-accent: #0c0a09;
+  --accent-soft: #15291f;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    @apply bg-stone-50 text-stone-700 antialiased dark:bg-stone-950 dark:text-stone-300;
+  }
+  :focus-visible {
+    @apply rounded-sm outline-2 outline-offset-2 outline-accent;
+  }
+}
